@@ -4,29 +4,22 @@
 #define DATA_PIN 3 
 #define COLOR_ORDER GRB
 #define CHIPSET WS2812B
-
 #define MATRIX_WIDTH 10
 #define MATRIX_HEIGHT 10
 #define MATRIX_TYPE HORIZONTAL_ZIGZAG_MATRIX
 
 cLEDMatrix<MATRIX_WIDTH, MATRIX_HEIGHT, MATRIX_TYPE> leds;
 
-enum Direction { UP, DOWN, LEFT, RIGHT };
+enum Direction {UP, DOWN, LEFT, RIGHT};
 Direction dir = LEFT;
 int snake[100] = {4,3,2,1,0}; //snake's initial location
 int snake_length = 5;         //snake's initial length
 
-const int leftButton = 4;
-const int rightButton = 5;
-const int upButton = 6;
-const int downButton = 7;
-int left_state = 0;
-int right_state = 0;
-int up_state = 0;
-int down_state = 0;
+const int leftButton = 4, rightButton = 5, upButton = 6, downButton = 7;
+int left_state = 0, right_state = 0, up_state = 0, down_state = 0;
 bool start = false;
 
-void setup() {
+void setup(){
   FastLED.addLeds<CHIPSET, DATA_PIN, COLOR_ORDER>(leds[0], leds.Size());
   pinMode(leftButton, INPUT);
   pinMode(rightButton, INPUT);
@@ -34,9 +27,8 @@ void setup() {
   pinMode(downButton, INPUT);
 }
 
-void loop() {
-  
-  while (!start) {
+void loop(){
+  while (!start){
     left_state = digitalRead(leftButton);
     right_state = digitalRead(rightButton);
     up_state = digitalRead(upButton);
@@ -114,7 +106,6 @@ void loop() {
     delay(200);
     clear_leds();
 
-    if snake
   }
 }
 
