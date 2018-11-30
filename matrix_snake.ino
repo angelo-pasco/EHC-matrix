@@ -11,10 +11,10 @@
 
 cLEDMatrix<MATRIX_WIDTH, MATRIX_HEIGHT, MATRIX_TYPE> leds;
 
-enum Direction { up, down, left, right };
-Direction dir = left;
-int snake[100] = {4,3,2,1,0};
-int snake_length = 5;
+enum Direction { UP, DOWN, LEFT, RIGHT };
+Direction dir = LEFT;
+int snake[100] = {4,3,2,1,0}; //snake's initial location
+int snake_length = 5;         //snake's initial length
 
 const int leftButton = 4;
 const int rightButton = 5;
@@ -24,6 +24,7 @@ int left_state = 0;
 int right_state = 0;
 int up_state = 0;
 int down_state = 0;
+bool start = false;
 
 void setup() {
   FastLED.addLeds<CHIPSET, DATA_PIN, COLOR_ORDER>(leds[0], leds.Size());
@@ -34,63 +35,86 @@ void setup() {
 }
 
 void loop() {
-  for (int frameNo = 0; frameNo < 1000; frameNo++)
-  {
+  
+  while (!start) {
+    left_state = digitalRead(leftButton);
+    right_state = digitalRead(rightButton);
+    up_state = digitalRead(upButton);
+    down_state = digitalRead(downButton);
+    if (left_state == HIGH){
+      dir = LEFT;
+      start = true;
+    }
+    else if (right_state = HIGH){
+      dir = RIGHT;
+      start = true;
+    }
+    else if (up_state = HIGH){
+      dir = UP;
+      start = true;
+    }
+    else if (down_state = HIGH){
+      dir = DOWN;
+      start = true;
+    }
+    
+    leds(snake[0]) = CRGB::Blue;
+    FastLED.show();
+    delay(30);
+    leds(snake[0]) = CRGB::Black;
+    FastLED.show();
+    delay(30);
+    
+  }
+  
+  for (int frameNo = 0; frameNo < 1000; frameNo++){
     left_state = digitalRead(leftButton);
     right_state = digitalRead(rightButton);
     up_state = digitalRead(upButton);
     down_state = digitalRead(downButton);
     
-    for (int i = (sizeof(snake)/sizeof(int)) - 1; i > 0; i--)
-    {
+    for (int i = (sizeof(snake)/sizeof(int)) - 1; i > 0; i--){ 
       snake[i] = snake[i-1];
     }
 
-
-    if ((left_state == HIGH) && (dir != right)){
-      dir = left;
+    if ((left_state == HIGH) && (dir != RIGHT)){
+      dir = LEFT;
     }
-    else if ((right_state == HIGH) && (dir != left)){
-      dir = right;
+    else if ((right_state == HIGH) && (dir != LEFT)){
+      dir = RIGHT;
     }
-    else if ((up_state == HIGH) && (dir != down)){
-      dir = up;
+    else if ((up_state == HIGH) && (dir != DOWN)){
+      dir = UP;
     }
-    else if ((down_state == HIGH) && (dir != up)){
-      dir = down;
-    }
-    /*
-    if (snake[0] == 9)
-    {
-      dir = up;
+    else if ((down_state == HIGH) && (dir != UP)){
+      dir = DOWN;
     }
 
-    if (snake[0] == 99)
-    {
-      dir = right;
+    switch(dir){
+      case UP:
+        snake[0] = snake[0] + 10;
+        break;
+      case DOWN:
+        snake[0] = snake[0] - 10;
+        break;
+      case LEFT:
+        snake[0] = snake[0] + 1;
+        break;
+      case RIGHT:
+        snake[0] = snake[0] - 1;
+        break;
     }
-
-    if (snake[0] == 90)
-    {
-      dir = down;
-    }
-
-    if (snake[0] == 0)
-    {
-      dir = left;
-    }
-
-    */
-    move_snake();
     
     for (int i = 0; i < snake_length ; i++)
     {
       leds(snake[i]) = CRGB::Blue;
     }
+    
     LEDS.show();
     delay(200);
     clear_leds();
 
+    if snake
   }
 }
 
@@ -99,23 +123,5 @@ void clear_leds()
   for (int i = 0; i < 100; i++)
   {
     leds(i) = CRGB::Black;
-  }
-}
-
-void move_snake()
-{
-  switch(dir) {
-    case up:
-      snake[0] = snake[0] + 10;
-      break;
-    case down:
-      snake[0] = snake[0] - 10;
-      break;
-    case left:
-      snake[0] = snake[0] + 1;
-      break;
-    case right:
-      snake[0] = snake[0] - 1;
-      break;
   }
 }
